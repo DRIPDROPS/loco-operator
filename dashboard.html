@@ -1,202 +1,111 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docker Dashboard</title>
+    <title>Chat Interface</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Add CSS for persistent sidebar */
-        #persistent-sidebar {
+        #chat-container {
             position: fixed;
-            bottom: 60px;  /* Above chat box */
+            bottom: 10px;
             right: 10px;
-            width: 300px;
+            width: 30vw;
+            height: 15vh;
             background-color: #f8f9fa;
             border: 1px solid #dee2e6;
             padding: 10px;
-            z-index: 1000;  /* Ensure it's on top */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
         }
-        #message-history {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 10px;
+        #chat-input {
+            margin-top: 5px;
         }
-        .message-item {
-            position: relative;
-            padding: 5px;
-            border-bottom: 1px solid #ccc;
-        }
-        .cancel-button {
-            position: absolute;
-            top: 0;
-            right: 0;
-            cursor: pointer;
+        button {
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-<div class="container-fluid">
-    <ul class="nav nav-tabs flex-column" style="width: 15%; float: left;">
-        <li class="nav-item">
-            <a class="nav-link active" id="docker-tab" data-bs-toggle="tab" href="#docker">Docker Containers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="agents-tab" data-bs-toggle="tab" href="#agents">Agents</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="agencies-tab" data-bs-toggle="tab" href="#agencies">Agencies</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="tools-tab" data-bs-toggle="tab" href="#tools">Tools</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="environment-tab" data-bs-toggle="tab" href="#environment">Execution Environment</a>
-        </li>
-    </ul>
-    <div class="tab-content" style="width: 85%; float: left;">
-        <div class="tab-pane fade show active" id="docker">
-            <h1>Docker Containers Dashboard</h1>
-            <div id="containers-list" class="row">
-                <!-- Placeholder for container modules -->
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Container Name</h5>
-                            <p class="card-text">Status: Running</p>
-                            <button class="btn btn-primary">Start</button>
-                            <button class="btn btn-secondary">Stop</button>
-                            <button class="btn btn-danger">Delete</button>
-                            <button class="btn btn-success">Create</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more container cards as needed -->
-            </div>
+    <div id="chat-container">
+        <div id="chat-history" style="overflow-y: auto; max-height: 50%; margin-bottom: 10px;"></div>
+        <input type="text" id="chatInput" placeholder="Type a message..." aria-label="Chat input" required>
+        <div>
+            <button id="sendMessageBtn" class="btn btn-primary">Send</button>
+            <button id="startVoiceBtn" class="btn btn-secondary"><i class="bi bi-microphone" aria-hidden="true"></i></button>
         </div>
-        <div class="tab-pane fade" id="agents">
-            <h1>Agents Overview</h1>
-            <p>Placeholder for agents list.</p>
-        </div>
-        <div class="tab-pane fade" id="agencies">
-            <h1>Agencies Overview</h1>
-            <p>Placeholder for agencies list.</p>
-        </div>
-        <div class="tab-pane fade" id="tools">
-            <h1>Tools Overview</h1>
-            <p>Placeholder for tools list.</p>
-        </div>
-        <div class="tab-pane fade" id="environment">
-            <h1>Execution Environment</h1>
-            <p>Placeholder for environment details.</p>
-            <!-- Moved Nudging System here -->
-            <div id="nudging-system">
-                <label for="nudgingInput">Enter nudging command:</label>
-                <input type="text" id="nudgingInput" placeholder="e.g., interrupt or append">
-                <button id="nudgingBtn">Apply Nudge</button>
-                <div id="feedbackIndicator" style="color: gray;">Waiting for input...</div>
-                <script>
-                    const nudgingInput = document.getElementById('nudgingInput');
-                    const nudgingBtn = document.getElementById('nudgingBtn');
-                    const feedbackIndicator = document.getElementById('feedbackIndicator');
-                    const agents = ['Product Manager', 'dockerAgent', 'gitbot', 'Operator', 'codeGrok', 'Ape', 'Data Scientist'];
-                    
-                    nudgingBtn.addEventListener('click', () => {
-                        const inputValue = nudgingInput.value.trim().toLowerCase();
-                        let actionType = '';
-                        if (inputValue.includes('interrupt')) {
-                            actionType = 'interrupt';
-                            feedbackIndicator.style.color = 'red';
-                            feedbackIndicator.textContent = 'Interrupted: Path may be incorrect.';
-                        } else if (inputValue.includes('append')) {
-                            actionType = 'append';
-                            feedbackIndicator.style.color = 'green';
-                            feedbackIndicator.textContent = 'Appended: Proceeding on the right path.';
-                        } else {
-                            feedbackIndicator.style.color = 'orange';
-                            feedbackIndicator.textContent = 'Invalid input: Please use "interrupt" or "append".';
-                            return;
-                        }
-                        if (inputValue.includes('delegate')) {
-                            const targetAgent = agents.find(agent => inputValue.includes(agent.toLowerCase()));
-                            if (targetAgent) {
-                                feedbackIndicator.textContent += ' Redelegating to ' + targetAgent + '.';
-                                console.log('Redelegating to:', targetAgent);
-                            } else {
-                                feedbackIndicator.textContent += ' No suitable agent found.';
-                            }
-                        }
-                    });
-                </script>
-            </div>
+        <div id="logs-column" style="overflow-y: scroll; display: flex; flex-direction: column-reverse;">
+            <ul id="logs-list" style="list-style-type: none; padding: 0; margin: 0;"></ul>
         </div>
     </div>
-    <!-- Add persistent sidebar -->
-    <div id="persistent-sidebar">
-        <label for="voiceInput">Enter text via voice:</label>
-        <textarea id="voiceInput" rows="4" cols="50"></textarea>
-        <button id="startVoiceBtn">Start Voice Input</button>
-        <script>
-            const voiceInput = document.getElementById('voiceInput');
-            const startVoiceBtn = document.getElementById('startVoiceBtn');
-            startVoiceBtn.addEventListener('click', () => {
-                if ('webkitSpeechRecognition' in window) {
-                    const recognition = new webkitSpeechRecognition();
-                    recognition.lang = 'en-US';
-                    recognition.interimResults = true;
-                    recognition.onresult = (event) => {
-                        let transcript = '';
-                        for (let i = event.resultIndex; i < event.results.length; ++i) {
-                            transcript += event.results[i][0].transcript;
-                        }
-                        voiceInput.value += transcript;
-                    };
-                    recognition.onerror = (event) => {
-                        console.error('Speech recognition error', event.error);
-                    };
-                    recognition.start();
-                } else {
-                    alert('Your browser does not support the Web Speech API.');
-                }
-            });
-        </script>
-        <div id="message-history">
-            <h6>Message History:</h6>
-            <!-- Dynamic messages will be added here via JavaScript -->
-        </div>
-        <div id="chat-box">
-            <input type="text" id="chatInput" placeholder="Type a message...">
-            <button id="sendMessageBtn">Send</button>
-            <script>
-                const messageHistory = document.getElementById('message-history');
-                const chatInput = document.getElementById('chatInput');
-                const sendMessageBtn = document.getElementById('sendMessageBtn');
-                sendMessageBtn.addEventListener('click', () => {
-                    const messageText = chatInput.value.trim();
-                    if (messageText) {
-                        const messageItem = document.createElement('div');
-                        messageItem.className = 'message-item';
-                        messageItem.innerHTML = `${messageText} <span class="cancel-button" onclick="cancelMessage(this)">X</span>`;
-                        messageHistory.appendChild(messageItem);
-                        chatInput.value = '';  // Clear input
-                        // Simulate delegation status (in a real app, this would tie to actual logic)
-                        setTimeout(() => {
-                            messageItem.innerHTML += ' (Delegated)';
-                        }, 2000);  // Example delay
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js" defer></script>
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const startVoiceBtn = document.getElementById('startVoiceBtn');
+        const logsList = document.getElementById('logs-list');
+        let recognition;
+
+        function addLog(message) {
+            const li = document.createElement('li');
+            li.textContent = message;
+            logsList.appendChild(li);
+            if (logsList.children.length > 50) {
+                logsList.removeChild(logsList.firstChild);
+            }
+        }
+
+        // Send message functionality
+        sendMessageBtn.onclick = () => {
+            const messageText = chatInput.value.trim();
+            if (messageText) {
+                console.log('Message sent:', messageText);
+                addLog('Sent: ' + messageText);
+                chatInput.value = '';
+            }
+        };
+
+        // Start recording when the button is held down
+        function startRecording() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = true;
+
+                recognition.onresult = (event) => {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        transcript += event.results[i][0].transcript;
                     }
-                });
-                window.cancelMessage = (element) => {
-                    if (element.parentElement.textContent.includes('(Delegated)')) {
-                        alert('Message already delegated and cannot be canceled.');
-                    } else {
-                        messageHistory.removeChild(element.parentElement);
-                    }
+                    chatInput.value = transcript; // Continuously update the input field
                 };
-            </script>
-        </div>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/js/bootstrap.bundle.min.js"></script>
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    alert('Error in speech recognition: ' + event.error + '. Please try again.');
+                };
+
+                recognition.start();
+            } else {
+                alert('Web Speech API not supported in this browser.');
+            }
+        }
+
+        // Stop recording when the button is released
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+
+        // Attach event listeners for hold-to-record functionality
+        startVoiceBtn.onmousedown = startRecording;
+        startVoiceBtn.onmouseup = stopRecording;
+        startVoiceBtn.onmouseleave = stopRecording; // Stop recording if the mouse leaves the button
+    </script>
 </body>
 </html>

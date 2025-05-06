@@ -100,17 +100,6 @@ def main():
         eth_module = EthereumModule()
         sui_module = SuiModule()
         
-        def auto_switch_token(token_network: str) -> str:
-            if token_network.lower() == 'ethereum':
-                return eth_module.switch_chain(os.getenv('ETHEREUM_CHAIN_ID'))
-            elif token_network.lower() == 'sui':
-                return sui_module.switch_chain(os.getenv('SUI_CHAIN_ID'))
-            else:
-                raise ValueError("Unsupported network")
-        
-        print(auto_switch_token('ethereum'))  # Example; integrate with UI in next steps
-    except ValueError as e:
-        print(f"Error: {e}")  # Proper error logging
 
 if __name__ == "__main__":
     main()
