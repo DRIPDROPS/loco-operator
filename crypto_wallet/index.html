@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Crypto Wallet Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Modular Crypto Wallet</h1>
+        <div id="wallet-overview">
+            <h2>Portfolio and Chains</h2>
+            <select id="chain-selector">
+                <option value="sui">Sui</option>
+                <option value="ethereum">Ethereum</option>
+            </select>
+            <button id="switch-chain">Switch Chain</button>
+            <div id="portfolio-display">
+                <h3>Your Portfolio</h3>
+                <ul id="token-list">
+                    <!-- Dynamic list for tokens; to be populated via JavaScript -->
+                    <li>Example Token (ETH): 5.0</li>
+                    <li>Example Token (SUI): 10.0</li>
+                </ul>
+                <button id="add-token">Add Token</button>
+            </div>
+        </div>
+        <script>
+            document.getElementById('switch-chain').addEventListener('click', () => {
+                const selectedChain = document.getElementById('chain-selector').value;
+                alert(`Switched to ${selectedChain} chain`);  // Placeholder for actual logic
+            });
+            document.getElementById('add-token').addEventListener('click', () => {
+                alert('Add token functionality; integrate with backend in next steps.');
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</body>
+</html>
